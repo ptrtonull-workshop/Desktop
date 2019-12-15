@@ -1,7 +1,8 @@
 from app.app import *
-
 db = create(account)
-#page(db,'test','sc')
-login()
+def yes():
+    find(db,'test','sc')
 
-#add(db,'test','sc')
+sss = Tk()
+Button(sss, text='修改',command = yes).grid(row=2,column=1)
+sss.mainloop()

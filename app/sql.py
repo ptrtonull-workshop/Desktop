@@ -52,7 +52,6 @@ def showMeta(db, database, table):
 # db：数据库指针，由create()函数创建
 # database：数据库名称，字符型
 # table：表名称，字符型
-# data：要插入的属性和数据值
 # data：是一个元组，是你要插入的值，数量必须与表对应
 # 如果data中的元素是str类型的，则它会被加""后加入到sql语句中
 def insert(db, database, table, data):
@@ -64,6 +63,7 @@ def insert(db, database, table, data):
             sql += str_conv(data[i])+','
         else:
             sql += str_conv(data[i])+')'
+    print(sql)
     cursor.execute(sql)
     db.commit()
     db.close()
@@ -79,13 +79,14 @@ def select(db,database,table,value):
     cursor.execute("use %s"%(database))
     meta = showMeta(db,database,table)
     value = str_conv(value)
+    res=[]
     for i in meta:
         data = ''
         cursor.execute("select *from %s where %s=%s"%(table,i,value))
         data = cursor.fetchall()
         if len(data)!=0:
-            return data[0]
-    return False
+            res.append(data)
+    return res
 
 
 def display(db, database, table):
@@ -97,6 +98,8 @@ def display(db, database, table):
     for i in data:
         res.append(i)
     return res
+
+
 # 删除表中的一项数据
 # db：数据库指针
 # database：数据库名称，字符型
