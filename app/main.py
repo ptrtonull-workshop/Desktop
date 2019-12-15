@@ -8,6 +8,12 @@ def page(db, database, table):
     Label(mainPage,text="table "+table+" in "+database).grid(row=0)
     L = Listbox(mainPage)
     L.grid(row=1)
+    def refresh():
+        data = display(db,database,table)
+        L.delete(0,END)
+        L.insert('end',meta)
+        for j in data:
+            L.insert("end",j)
     def destroy_win():
         mainPage.destroy()
     def insert_data():
@@ -19,19 +25,9 @@ def page(db, database, table):
     def delete_data():
         no = L.curselection()
         delete(db,database,table,no[0]-1)
-        data = display(db,database,table)
-        L.delete(0,END)
-        L.insert('end',meta)
-        for j in data:
-            L.insert("end",j)
+        refresh()
     def search_data():
         find(db,database,table)
-    def refresh():
-        data = display(db,database,table)
-        L.delete(0,END)
-        L.insert('end',meta)
-        for j in data:
-            L.insert("end",j)
     Button(mainPage, text='I know.',command = destroy_win).grid(row=4,column=2)
     Button(mainPage, text='刷新',command = refresh).grid(row=4,column=1)
     Button(mainPage, text='插入',command = insert_data).grid(row=2,column=0)
