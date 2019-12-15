@@ -10,6 +10,20 @@ account = {"host": "localhost", "username": "root", "password": "root"}
 
 database = "test"
 
+
+def find_where(db, database, table,position):
+    cursor = db.cursor()
+    cursor.execute("use %s"% (database))
+    cursor.execute('select *from %s limit 1 offset %s'%(table,position))
+    data = cursor.fetchall()[0]
+    temp = ""
+    meta = showMeta(db,database,table)
+    for i in range(len(data)):
+        temp+=str(meta[i])+"="+str(data[i])
+        if i != len(data)-1:
+            temp +=" and "
+    return temp
+
 def str_conv(value):
     if type(value)is not str:
         return str(value)
@@ -63,10 +77,8 @@ def insert(db, database, table, data):
             sql += str_conv(data[i])+','
         else:
             sql += str_conv(data[i])+')'
-    print(sql)
     cursor.execute(sql)
-    db.commit()
-    db.close()
+
 
 
 # 搜索某一表中的数据
@@ -108,14 +120,19 @@ def display(db, database, table):
 def delete(db, database, table, position):
     cursor = db.cursor()
     cursor.execute("use %s"%(database))
-    cursor.execute("delete from %s limit 1 offset %s"%(table, position))
+    sql = 'delete from %s where '%(table)
+    temp = find_where(db,database,table,position)
+    sql+=temp
+    cursor.execute(sql)
     db.commit()
-    db.close()
 
-def update(db, table, position, value):
+def update(db, database, table, position, meta_name, value):
     cursor = db.cursor()
     cursor.execute("use %s"%(database))
-    cursor.execute("update %s set %s =%s limit 1 offset %s", table, )
+    sql = 'update %s set %s = %s  where '%(table,meta_name,value)
+    sql +=find_where(db,database,table,position)
+    cursor.execute(sql)
+    db.commit()
 
 # 显示
 def show(db):
