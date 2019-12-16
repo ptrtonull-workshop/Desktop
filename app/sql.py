@@ -1,11 +1,5 @@
 import MySQLdb
 
-'''
-增加
-删除
-改数据
-查数据
-'''
 account = {"host": "localhost", "username": "root", "password": "root"}
 
 database = "test"
